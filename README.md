@@ -8,6 +8,9 @@
 
 ---
 
+
+![header](screenshots/header.png)
+
 ## What's interesting
 
 - **Pydantic at the boundary** — `BookCreate` validates inbound POST bodies; `BookUpdate` allows partial updates with all optional fields.
