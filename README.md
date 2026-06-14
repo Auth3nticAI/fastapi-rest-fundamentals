@@ -1,32 +1,41 @@
-# Book Tracker API — Week 3
+# FastAPI REST Fundamentals
 
-A small FastAPI REST API for tracking books — read, reading, or want to read.
-In-memory storage (resets on restart); persistence comes in Week 4.
+> A FastAPI starter API — REST endpoints, Pydantic validation, automatic OpenAPI/Swagger docs. In-memory state (no database yet) so the focus stays on the HTTP layer.
 
-## Run it
+![FastAPI](https://img.shields.io/badge/FastAPI-0.136-009688?style=flat&logo=fastapi&logoColor=white)
+![Pydantic](https://img.shields.io/badge/Pydantic-2.13-E92063?style=flat&logo=pydantic&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
+
+---
+
+## What's interesting
+
+- **Pydantic at the boundary** — `BookCreate` validates inbound POST bodies; `BookUpdate` allows partial updates with all optional fields.
+- **Route-order awareness** — literal `/books/stats` declared *before* dynamic `/books/{book_id}` so FastAPI doesn't try to parse `"stats"` as an int and 422.
+- **In-memory list with a separate `next_id`** — illustrates why the next step in the course is Postgres + SQLAlchemy.
+
+## Endpoints
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/health` | Health check |
+| `GET` | `/books` | List (filter by `?status=`) |
+| `POST` | `/books` | Create |
+| `GET` | `/books/stats` | Count by status + average rating |
+| `GET` | `/books/{id}` | Read one |
+| `PUT` | `/books/{id}` | Update status / rating |
+| `DELETE` | `/books/{id}` | Delete |
+
+## Run
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-- Welcome: <http://localhost:8000/>
-- Interactive docs: <http://localhost:8000/docs>
+Open http://localhost:8000/docs for Swagger.
 
-## Endpoints
+## Background
 
-| Method | Path                       | Description                                |
-|--------|----------------------------|--------------------------------------------|
-| GET    | `/`                        | Welcome message                            |
-| GET    | `/health`                  | Liveness probe                             |
-| GET    | `/books`                   | List all books; `?status=` filter optional |
-| POST   | `/books`                   | Create a book (201)                        |
-| GET    | `/books/stats`             | Counts by status + average rating          |
-| GET    | `/books/{book_id}`         | Fetch one book (404 if missing)            |
-| PUT    | `/books/{book_id}`         | Partial update of status and/or rating     |
-| DELETE | `/books/{book_id}`         | Remove a book                              |
-
-`/books/stats` is intentionally declared before `/books/{book_id}` so the
-literal route wins the match.
+Built as the Week 3 lab for **CSE552 — Fullstack Software Development in the Age of AI Agents**. The Postgres-backed version is at [fastapi-postgres-crud](https://github.com/Auth3nticAI/fastapi-postgres-crud).
